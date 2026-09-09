@@ -1,6 +1,8 @@
 # FlyoutButtonCustomLegacy
 
-![FlyoutButtonCustomLegacy](media/FlyoutButtonCustomLegacy.png)
+<p align="center">
+	<img src="media/FlyoutButtonCustomLegacy.png" alt="FlyoutButtonCustomLegacy icon" width="128">
+</p>
 
 An adaptation of the original Cataclysm-era **FlyoutButtonCustom** addon for
 World of Warcraft 3.3.5a.

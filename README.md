@@ -44,11 +44,11 @@ Create a uniquely named macro containing, for example:
 /fbc 4
 ```
 
-Drag that macro onto an action bar. Drag spells or items into the flyout slots,
-and drag entries from the flyout onto an action bar.
+Drag that macro onto an action bar, then drag spells or items into the flyout
+slots.
 
-Due to API limitations in the WoW 3.3.5a client, flyout contents can only be
-modified while the spellbook is open.
+<span style="color:red"><strong>Due to API limitations in the WoW 3.3.5a
+client, flyout contents can only be modified while the spellbook is open.</strong></span>
 
 Click the circular minimap button to open or close the settings window.
 

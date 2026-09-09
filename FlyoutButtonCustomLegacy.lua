@@ -78,7 +78,7 @@ local function AttachToAllActionButtons()
 				local macroName, _, macroBody = GetMacroInfo(actionID)
 				local slots = macroBody and tonumber(macroBody:match("/fbc%s+(%d+)"))
 				if macroName and slots and slots > 0 then
-					FlyoutArrowButton_Attach(frame, macroName, slots)
+					FlyoutArrowButton_Attach(frame, macroName, slots, actionID)
 					attached[frame:GetName()] = true
 				end
 			end

@@ -6,6 +6,9 @@ FlyoutListButton = {}
 
 
 local FlyoutListButtonOnClickWrapScript = [=[
+	if not self:GetAttribute("type") then
+		return
+	end
 	local listFrame = self:GetParent()
 	if listFrame then
 		local arrowBtn = listFrame:GetParent()
@@ -28,7 +31,7 @@ function FlyoutListButton_New(parent, idx)
 	btn.hotkey = _G[btn:GetName().."HotKey"]
 	btn.ntexture = _G[btn:GetName().."NormalTexture"]
 	local arrowBtn = parent:GetParent()
-	btn.actnBtnName = arrowBtn.flyoutName or arrowBtn:GetParent():GetName()
+	btn.actnBtnName = arrowBtn.configName or arrowBtn.flyoutName or arrowBtn:GetParent():GetName()
 	
 	-- adding methods to button
 	for k, v in pairs(FlyoutListButton) do
@@ -515,6 +518,8 @@ function FlyoutListButton:PostClick(button)
 		if command then
 			FlyoutButton_SetCursor(command, value, subValue)
 		end
+	elseif button == "LeftButton" and not self.command then
+		self:SetChecked(nil)
 	elseif button == "RightButton" then
 		local arrowBtn = self:GetParent():GetParent()
 		local actBtn = arrowBtn:GetParent()
@@ -585,7 +590,7 @@ function FlyoutListButton:OnDragStart()
 	end
 	
 	if FlyoutButtonCustomLegacy_Settings[actnBtnName] and FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet] and FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet][self.index] then
-		FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet][self.index] = {}
+		FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet][self.index] = nil
 	end
 	
 	self:Set(nil, nil, nil)
@@ -602,14 +607,31 @@ function FlyoutListButton:OnDragStart()
 		end
 	end
 	
-	--empty tables to nil
+	--Remove empty slot tables so stale entries cannot be restored after a rename.
 	if FlyoutButtonCustomLegacy_Settings[actnBtnName] then
-		if FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet] then
-			if #FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet] == 0 then
+		local savedSet = FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet]
+		if savedSet then
+			local hasSavedSlot = false
+			for index, slot in pairs(savedSet) do
+				if type(index) == "number" then
+					if slot and slot.command then
+						hasSavedSlot = true
+					else
+						savedSet[index] = nil
+					end
+				end
+			end
+			if not hasSavedSlot then
 				FlyoutButtonCustomLegacy_Settings[actnBtnName][currentSet] = nil
 			end
 		end
-		if #FlyoutButtonCustomLegacy_Settings[actnBtnName] == 0 then
+		local hasSavedSet = false
+		for index, value in pairs(FlyoutButtonCustomLegacy_Settings[actnBtnName]) do
+			if type(index) == "number" and value then
+				hasSavedSet = true
+			end
+		end
+		if not hasSavedSet then
 			FlyoutButtonCustomLegacy_Settings[actnBtnName] = nil
 		end
 	end

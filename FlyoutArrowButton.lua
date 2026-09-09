@@ -296,13 +296,13 @@ function FlyoutArrowButton:OnDragStop()
 	self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y)
 
 	local positions = FlyoutButtonCustomLegacy_Settings["positions"]
-	positions[self.flyoutName or self:GetParent():GetName()] = { x = x, y = y }
+	positions[self.configName or self.flyoutName or self:GetParent():GetName()] = { x = x, y = y }
 end
 
 function FlyoutArrowButton:SetAnchor(parent, expandDir)
 	if OPEN_FROM_MAIN_BUTTON and self == parent then
 		local positions = FlyoutButtonCustomLegacy_Settings["positions"]
-		local position = positions and positions[self.flyoutName]
+		local position = positions and positions[self.configName or self.flyoutName]
 		if position then
 			self:ClearAllPoints()
 			self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", position.x, position.y)
@@ -314,7 +314,7 @@ function FlyoutArrowButton:SetAnchor(parent, expandDir)
 	self.FlyoutArrow:ClearAllPoints()
 	if OPEN_FROM_MAIN_BUTTON then
 		local positions = FlyoutButtonCustomLegacy_Settings["positions"]
-		local position = positions and positions[parent:GetName()]
+		local position = positions and positions[self.configName or self.flyoutName or parent:GetName()]
 		if position then
 			self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", position.x, position.y)
 		else
@@ -461,7 +461,7 @@ function GetFlyoutArrowButton(frame)
 	return FbcArrowButtons[frame:GetName()]
 end
 
-function FlyoutArrowButton_Attach(frame, flyoutName, requestedSlots)
+function FlyoutArrowButton_Attach(frame, flyoutName, requestedSlots, macroID)
 	-- Creating, anchoring, showing, or changing attributes of protected frames
 	-- is forbidden in combat. Existing secure list buttons remain usable there.
 	if not frame or not frame:GetName() or frame:GetName() == "" or InCombatLockdown() then
@@ -472,7 +472,7 @@ function FlyoutArrowButton_Attach(frame, flyoutName, requestedSlots)
 	end
 	
 	local actnBtnName = frame:GetName()
-	local configName = flyoutName or actnBtnName
+	local configName = macroID and "macro:"..tostring(macroID) or flyoutName or actnBtnName
 	local currentSet = GetActiveTalentGroup()
 	local expandDir = FBC_DIR_UP
 
@@ -481,8 +481,15 @@ function FlyoutArrowButton_Attach(frame, flyoutName, requestedSlots)
 		arrowBtn = FlyoutArrowButton_New(frame, flyoutName)
 	end
 	arrowBtn.flyoutName = flyoutName
+	arrowBtn.configName = configName
 	arrowBtn.requestedSlots = requestedSlots
 	local fbcs = FlyoutButtonCustomLegacy_Settings
+	if macroID and not fbcs[configName] and fbcs[flyoutName] then
+		fbcs[configName] = fbcs[flyoutName]
+	end
+	if macroID and not fbcs["expandDir"][currentSet][configName] then
+		fbcs["expandDir"][currentSet][configName] = fbcs["expandDir"][currentSet][flyoutName]
+	end
 	
 	if fbcs["expandDir"][currentSet][configName] then
 		expandDir = fbcs["expandDir"][currentSet][configName]
@@ -510,15 +517,27 @@ function FlyoutArrowButton_Attach(frame, flyoutName, requestedSlots)
 				btn:SetKey(nil)
 			end
 		end
-		arrowBtn:SetAttribute("bcount", #fbcs[configName][currentSet])
+		for i = savedCount + 1, requestedSlots or savedCount do
+			local btn = FlyoutListButton_AttachToList(flf, i, expandDir)
+			btn:Set(nil, nil, nil)
+		end
+		local visibleCount = requestedSlots or savedCount
+		arrowBtn:SetAttribute("bcount", visibleCount)
+		flf:SetAttribute("bcount", visibleCount)
 		arrowBtn:Show()
 		arrowBtn:SetAlpha(1)
 		if not OPEN_FROM_MAIN_BUTTON then
 			arrowBtn.FlyoutArrow:Show()
 		end
 	else
-		arrowBtn:SetAttribute("bcount", 0)
-		if FbcSettingsMode then
+		local visibleCount = requestedSlots or 0
+		arrowBtn:SetAttribute("bcount", visibleCount)
+		flf:SetAttribute("bcount", visibleCount)
+		for i = 1, visibleCount do
+			local btn = FlyoutListButton_AttachToList(flf, i, expandDir)
+			btn:Set(nil, nil, nil)
+		end
+		if visibleCount > 0 then
 			arrowBtn:Show()
 		else
 			arrowBtn:Hide()
@@ -570,7 +589,7 @@ function FlyoutArrowButton:UpdateArrow()
 	end
 	
 	local currentSet = GetActiveTalentGroup()
-	local actnBtnName = self.flyoutName or self:GetParent():GetName()
+	local actnBtnName = self.configName or self.flyoutName or self:GetParent():GetName()
 	local fbcs = FlyoutButtonCustomLegacy_Settings
 	local count, settingsCount = 0, 0
 	
@@ -579,19 +598,20 @@ function FlyoutArrowButton:UpdateArrow()
 	else
 		count, settingsCount = FlyoutButton_GetListButtonsCount(nil)
 	end
-	if FbcSettingsMode and self.requestedSlots then
+	if self.requestedSlots then
 		settingsCount = self.requestedSlots
 	end
+	local visibleCount = settingsCount
 	
 	local flf = self.FlyoutListFrame
 	flf:SetSize(self:GetAttribute("expandDir"), settingsCount)
-	self:SetAttribute("bcount", count)
-	self.FlyoutListFrame:SetAttribute("bcount", count)
+	self:SetAttribute("bcount", visibleCount)
+	self.FlyoutListFrame:SetAttribute("bcount", visibleCount)
 	
 	--cleanup
 	for i, v in ipairs(flf.ButtonList) do
 		if not(v.command) then
-			if FbcSettingsMode then
+			if i <= settingsCount then
 				v:Set(nil, nil, nil)
 			else
 				v:HideButton()
@@ -601,11 +621,9 @@ function FlyoutArrowButton:UpdateArrow()
 	end
 	
 	--add empty buttons
-	if FbcSettingsMode then
-		for i = count + 1, settingsCount do
-			local btn = FlyoutListButton_AttachToList(flf, i, self:GetAttribute("expandDir"))
-			btn:Set(nil, nil, nil)
-		end
+	for i = count + 1, settingsCount do
+		local btn = FlyoutListButton_AttachToList(flf, i, self:GetAttribute("expandDir"))
+		btn:Set(nil, nil, nil)
 	end
 end
 
@@ -617,7 +635,7 @@ function FlyoutArrowButton:PostClick(button)
 			else
 				--cleanup
 				for i, v in ipairs(self.FlyoutListFrame.ButtonList) do
-					if v.command then
+					if i <= self:GetAttribute("bcount") then
 						v:Show()
 					else
 						v:HideButton()
@@ -633,7 +651,7 @@ function FlyoutArrowButton:PostClick(button)
 			end
 
 			local currentSet = GetActiveTalentGroup()
-			FlyoutButtonCustomLegacy_Settings["expandDir"][currentSet][self.flyoutName or self:GetParent():GetName()] = expandDir
+			FlyoutButtonCustomLegacy_Settings["expandDir"][currentSet][self.configName or self.flyoutName or self:GetParent():GetName()] = expandDir
 
 			self:SetAnchor(self:GetParent(), expandDir)
 			self:SetFrameSize(expandDir)

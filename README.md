@@ -10,6 +10,9 @@ World of Warcraft 3.3.5a.
 > This addon is not intended for World of Warcraft Classic. It targets the
 > legacy 3.3.5a client available on private servers.
 
+> [!CAUTION]
+> **This addon is still in development. Expect bugs.**
+
 ## About this project
 
 This project starts from the original Cataclysm version and adapts it to the

@@ -19,7 +19,7 @@ This project starts from the original Cataclysm version and adapts it to the
 legacy 3.3.5a client, with several additions of my own.
 
 - Original addon: [FlyoutButton Custom on CurseForge](https://www.curseforge.com/wow/addons/flyoutbutton-custom)
-- Original author: **vladimiseven**
+- Original author: **vladimirseven**
 - Target client: World of Warcraft 3.3.5a
 
 ## Features
@@ -81,5 +81,5 @@ Tested with the default Blizzard action bar. Other action-bar addons have not be
 
 ## Credits
 
-The original concept and addon were created by **vladimiseven**. This repository
+The original concept and addon were created by **vladimirseven**. This repository
 contains the legacy client adaptation and its additional interface changes.

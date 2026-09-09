@@ -1,7 +1,7 @@
 # FlyoutButtonCustomLegacy
 
 <p align="center">
-	<img src="media/FlyoutButtonCustomLegacy.png" alt="FlyoutButtonCustomLegacy icon" width="128">
+	<img src="media/FlyoutButtonCustomLegacy.png" alt="FlyoutButtonCustomLegacy icon" width="256">
 </p>
 
 An adaptation of the original Cataclysm-era **FlyoutButtonCustom** addon for

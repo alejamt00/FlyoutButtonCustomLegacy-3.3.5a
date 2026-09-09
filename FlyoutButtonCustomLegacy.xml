@@ -1,0 +1,89 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+	..\FrameXML\UI.xsd">
+
+	<Texture name="CustomFlyoutButton-ArrowUp" file="Interface\Buttons\ActionBarFlyoutButton" virtual="true" >
+		<Size x="23" y="11"/>	
+		<TexCoords left="0.62500000" right="0.98437500" top="0.74218750" bottom="0.82812500"/>	
+	</Texture>
+
+	<CheckButton name="CustomFlyoutButtonArrowTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="36" y="11"/>
+		</Size>
+		<Layers>
+		<Layer level="ARTWORK">
+			<Texture name="$parentFlyoutArrow" inherits="CustomFlyoutButton-ArrowUp" hidden="true">
+					<Anchors>
+						<Anchor point="TOP"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</CheckButton>
+
+	<!-- arrow button template -->
+	<CheckButton name="CustomFlyoutArrowButtonTemplate" inherits="SecureHandlerClickTemplate, SecureHandlerEnterLeaveTemplate, SecureHandlerStateTemplate, CustomFlyoutButtonArrowTemplate" hidden="true" virtual="true">
+		<Scripts>
+			<PostClick>
+				self:PostClick(button)
+			</PostClick>
+			<OnLeave>
+				self:OnLeave()
+			</OnLeave>
+		</Scripts>
+	</CheckButton>
+
+	<!-- Standalone 3.3.5 flyout main button: a real secure action-button-style
+	     CheckButton, not an overlay on a Blizzard action-bar slot. -->
+	<CheckButton name="CustomFlyoutMainButtonTemplate" inherits="SecureHandlerClickTemplate, SecureHandlerEnterLeaveTemplate, SecureHandlerStateTemplate, ActionButtonTemplate" hidden="true" virtual="true">
+		<Scripts>
+			<PostClick>
+				self:PostClick(button)
+			</PostClick>
+		</Scripts>
+	</CheckButton>
+
+	<!-- flyout list buttons template -->
+	<CheckButton name="CustomFlyoutListButtonTemplate" inherits="SecureHandlerBaseTemplate, SecureActionButtonTemplate, ActionButtonTemplate" virtual="true">
+		<Scripts>
+			<PreClick>
+				self:PreClick(button)
+			</PreClick>
+			<PostClick>
+				self:PostClick(button)
+			</PostClick>
+			<OnReceiveDrag>
+				self:OnReceiveDrag()
+			</OnReceiveDrag>
+			<OnDragStart>
+				self:OnDragStart()
+			</OnDragStart>
+			<OnEnter>
+				self:OnEnter()
+			</OnEnter>
+			<OnLeave>
+				self:OnLeave()
+			</OnLeave>
+		</Scripts>
+	</CheckButton>
+
+	<Frame name="CustomFlyoutListFrameTemplate" inherits="SecureHandlerStateTemplate, SecureHandlerEnterLeaveTemplate" hidden="true" enableMouse="true" frameStrata="DIALOG" virtual="true">
+		<Size>
+			<AbsDimension x="288" y="36"/>
+		</Size>
+		<Scripts>
+			<OnEnter>
+				self:GetParent():OnListEnter()
+			</OnEnter>
+			<OnLeave>
+				self:GetParent():OnListLeave()
+			</OnLeave>
+			<OnShow>
+				self:OnShow()
+			</OnShow>
+			<OnHide>
+				self:OnHide()
+			</OnHide>
+		</Scripts>
+	</Frame>
+</Ui>

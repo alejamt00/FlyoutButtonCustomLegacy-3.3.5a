@@ -1,0 +1,18 @@
+## Interface: 30300
+## Title: FlyoutButtonCustomLegacy
+## Author: another
+## Version: 1.85
+## Notes: Custom flyout buttons support
+## SavedVariablesPerCharacter: FlyoutButtonCustomLegacy_Settings
+
+libs\libstub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibKeyBound-1.0\lib.xml
+
+Common.lua
+FlyoutButtonCustomLegacy.xml
+Settings.xml
+FlyoutListButton.lua
+FlyoutArrowButton.lua
+FlyoutListFrame.lua
+FlyoutButtonCustomLegacy.lua

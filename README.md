@@ -48,7 +48,7 @@ Drag that macro onto an action bar, then drag spells or items into the flyout
 slots.
 
 > [!WARNING]
-> Due to API limitations in the WoW 3.3.5a client, flyout contents can only be modified while the spellbook is open.
+> **Due to API limitations in the WoW 3.3.5a client, flyout contents can only be modified while the spellbook is open.**
 
 Click the circular minimap button to open or close the settings window.
 

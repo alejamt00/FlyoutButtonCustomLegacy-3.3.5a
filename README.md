@@ -1,4 +1,4 @@
-# FlyoutButtonCustomLegacy
+# FlyoutButtonCustomLegacy 3.3.5a
 
 <p align="center">
 	<img src="media/FlyoutButtonCustomLegacy.png" alt="FlyoutButtonCustomLegacy icon" width="256">

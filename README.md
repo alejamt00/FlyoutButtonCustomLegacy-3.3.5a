@@ -82,4 +82,4 @@ Tested with the default Blizzard action bar. Other action-bar addons have not be
 ## Credits
 
 The original concept and addon were created by **vladimirseven**. This repository
-contains the legacy client adaptation and its additional interface changes.
+contains the 3.3.5a legacy client adaptation and its additionals new features.

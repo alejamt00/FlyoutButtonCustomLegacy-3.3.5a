@@ -87,7 +87,11 @@ local ArrowButtonOnClickSnippet = [=[
 	end
 ]=]
 ArrowButtonOnEnterSnippet = [=[
-	if not(self:GetAttribute("mouseoverincombat")) and (self:GetAttribute("incombat") > 0) then
+	local inCombat = self:GetAttribute("incombat")
+	local mouseoverInCombat = self:GetAttribute("mouseoverincombat")
+	local combatActive = inCombat == 1 or inCombat == "1" or inCombat == true or inCombat == "true"
+	local mouseoverAllowed = mouseoverInCombat == 1 or mouseoverInCombat == "1" or mouseoverInCombat == true or mouseoverInCombat == "true"
+	if combatActive and not mouseoverAllowed then
 		return
 	end
 	
